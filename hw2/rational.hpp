@@ -38,6 +38,25 @@ public:
     Rational();
     Rational(int _num);
     Rational(int _num, int _den);
+    
+    Rational& operator+=(const Rational& r);
+    Rational& operator-=(const Rational& r);
+    Rational& operator*=(const Rational& r);
+    Rational& operator/=(const Rational& r);
+    
+    Rational& operator++();
+    Rational& operator--();
+    
+    Rational operator++(int);
+    Rational operator--(int);
+
+    Rational operator-() const;
+    Rational operator+() const;
+
+    explicit operator double() const;
+
+
+
 
 private:
     int num;
@@ -48,9 +67,19 @@ private:
 
     friend bool operator==(const Rational&, const Rational&);
     friend bool operator< (const Rational&, const Rational&);
-
     friend std::ostream& operator<<(std::ostream&, const Rational&);
+
 };
+
+Rational operator+(const Rational& left, const Rational& right);
+Rational operator-(const Rational& left, const Rational& right);
+Rational operator*(const Rational& left, const Rational& right);
+Rational operator/(const Rational& left, const Rational& right);
+
+bool operator!=(const Rational& left, const Rational& right);
+bool operator<=(const Rational& left, const Rational& right);
+bool operator>(const Rational& left, const Rational& right);
+bool operator>=(const Rational& left, const Rational& right);
 
 std::istream& operator>>(std::istream&, Rational&);
 

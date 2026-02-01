@@ -135,30 +135,6 @@ int recursive_binary_search(const std::vector<int>& v, int target, size_t low, s
 }
 
 //operator overloading
-class C{
-    public:
-        C(int _i, int _j): i(_i), j(_j){}
-        C(): i(0), j(0){};
-    
-    void print(){
-        cout << i << " "  << j << endl;
-    }
-    
-    
-    C& operator+=(const C &other){
-        i += other.i;
-        j += other.j;
-        return *this;
-    }
-
-    bool operator==(const C &other){
-        return i == other.i && j == other.j;
-    }
-
-    private:
-        int i;
-        int j;
-};
 
 class Sets{
     private:
@@ -251,6 +227,7 @@ class Point2D{
         int x;
         int y;
         friend ostream& operator<<(ostream& out, const Point2D& other);
+        friend bool operator==(Point2D& other1, Point2D& other2);
 
     public:
         Point2D(){};
@@ -278,6 +255,15 @@ ostream& operator<<(ostream& out, const Point2D& other){
     return out;
 }
 
+bool operator==(Point2D& other1, Point2D& other2){
+    return (other1.x == other2.x) && (other1.y == other2.y);
+}
+
+//why cant we use const on vars or outside ?
+bool operator!=(Point2D& other1, Point2D& other2){
+    return !(other1 == other2);
+}
+
 const int& Point2D::operator[](size_t index) const{
     if(index == 0) return x;
     else return y;
@@ -288,15 +274,90 @@ int& Point2D::operator[](size_t index){
     else return y;
 }
 
+class OneVal{
+    private:
+        int i;
+        friend ostream& operator<<(ostream& cout, const OneVal v1);
+
+    public:
+        OneVal(int _i): i(_i){};
+        OneVal(){};
+
+        OneVal& operator++(){
+            ++i;
+            return *this;
+        }
+
+        //prefix
+        OneVal& operator--(){
+            --i;
+            return *this;
+        }
+
+        //postfix
+        OneVal operator--(int){
+            OneVal o = *this;
+            --i;
+            return o;
+        }
+
+        OneVal operator-(){
+            i*=-1;
+            return *this;
+        }
+
+
+};
+
+ostream& operator<<(ostream& cout, const OneVal v1){
+    cout << v1.i;
+    return cout;
+}
+
+class TwoVals{
+    private:
+        int i;
+        int j;
+        friend ostream& operator<<(ostream& cout, const TwoVals& v);
+    public:
+        TwoVals(){};
+        TwoVals(int _i, int _j): i(_i), j(_j){};
+
+        bool operator==(TwoVals& other) const{
+            return (i == other.i) && (j == other.j);
+        }
+
+        TwoVals& operator+=(TwoVals& other){
+            i+= other.i;
+            j += other.j;
+            return *this;
+        }
+
+        TwoVals& operator--(){
+            i -= 1;
+            j -= 1;
+            return *this;
+        }
+
+        TwoVals& operator++(){
+            i += 1;
+            j += 1;
+            return *this;
+        }
+};
+
+ostream& operator<<(ostream& cout, const TwoVals& v){
+    cout << v.i;
+    return cout;
+}
+
 int main(){
-    
-    Point2D p1(2,5);
-    Point2D p2(3,4);
-    p1[0] = 12;
-    cout << p1[0] << " " << p2[1];
+
 
 
     return 0;
 }
+
+//how can we use operator !+/== without specifying Point2D:: ?
 
 //clang++ -std=c++14 lecture.cpp -o lecture && ./lecture

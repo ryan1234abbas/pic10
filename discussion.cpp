@@ -82,13 +82,75 @@ void permutations(std::unordered_set<int> used_up,std::vector<int> curr, unsigne
     }
 }
 
+class C{
+    private:
+        int i;
+        friend C& operator+(const C& left, const C&right);
+        friend ostream& operator<<(ostream& cout, const C& other);
+        friend bool operator==(const C& left,const C& right);
+    public:
+        C(){};
+        C(int _i): i(_i){};
+
+        C& operator+=(const C& other){
+            i += other.i;
+            return *this; 
+        }
+        //or
+        C& operator+=(const int& val){
+            i+= val;
+            return *this;
+        }
+
+        //pre-increment
+        C& operator++(){
+            i++;
+            return *this;
+        }
+        //post-increment
+        C operator++(int){
+            C temp(i);
+            i++;
+            return temp;
+        }
+        //make it explicit
+        C operator-(){
+            return i *= -1;
+        }
+
+        //perform other operations in midterm pratcice
+
+
+};
+
+C& operator+(const C& left, const C&right){
+    C res(0);
+    res += left.i + right.i;
+    return res;
+}
+
+ostream& operator<<(ostream& cout, const C& other){
+    cout << other.i;
+    return cout;
+}
+
+bool operator==(const C& left,const C& right){
+    return (left.i == right.i);
+}
+
 int main(){
 
-    std::unordered_set<int> used_up;
-    std::vector<int> curr;
-    unsigned int n = 3;
+    // std::unordered_set<int> used_up;
+    // std::vector<int> curr;
+    // unsigned int n = 3;
     
-    permutations(used_up, curr, n);
+    // permutations(used_up, curr, n);
+
+    C c(0);
+    c++;
+    -c;
+    ++c;
+    cout << c;
 
 
     return 0;

@@ -60,3 +60,132 @@ std::istream& operator>>(std::istream& in, Rational& r) {
 
     return in;
 }
+
+std::ostream& operator<<(std::ostream& out, const Rational& r){
+    if(r.den == 1){
+        out << r.num;
+    }
+    else{
+        out << r.num << "/" << r.den;
+    }
+    return out;
+
+}
+
+Rational& Rational::operator+=(const Rational& r){
+    num = (num * r.den) + (den * r.num);
+    den = den * r.den;
+    simplify();
+    return *this;
+}
+
+Rational& Rational::operator-=(const Rational& r){
+    num = (num * r.den) - (den * r.num);
+    den = den * r.den;
+    simplify();
+
+    return *this;   
+}
+
+Rational& Rational::operator*=(const Rational& r){
+    num *= r.num;
+    den *= r.den;
+    simplify();
+    return *this;
+}
+
+Rational& Rational::operator/=(const Rational& r){
+    assert(r != Rational(0));
+    num *= r.den;
+    den *= r.num;
+    make_den_pos();
+    simplify();
+    return *this;
+    
+}
+
+Rational& Rational::operator++(){
+    (*this).num += (*this).den;
+    return *this;
+}
+
+Rational Rational::operator++(int){
+    Rational r = *this;
+    num += den;
+    return r;
+}
+
+Rational& Rational::operator--(){
+    (*this).num -= (*this).den;
+    return *this;
+}
+
+Rational Rational::operator--(int){
+    Rational r = *this;
+    num -= den;
+    return r;
+}
+
+//unary
+Rational Rational::operator-() const{
+    return Rational(-num,den);
+}
+Rational Rational::operator+() const{
+    return *this;
+}
+
+//binary
+Rational operator-(const Rational& left, const Rational& right){
+    Rational val = left;
+    val -= right;
+    return val;
+}
+
+Rational operator+(const Rational& left, const Rational& right){
+    Rational val = left;
+    val += right;
+    return val;
+}
+
+Rational operator*(const Rational& left, const Rational& right){
+    Rational val = left;
+    val *= right;
+    return val;
+}
+
+Rational operator/(const Rational& left, const Rational& right){
+    assert(right != Rational(0));
+    Rational val = left;
+    val /= right;
+    return val;
+}
+
+bool operator==(const Rational& left, const Rational& right){
+    return (left.num == right.num) && (left.den == right.den);
+}
+bool operator!=(const Rational& left, const Rational& right){
+    return !(left == right);
+}
+bool operator<(const Rational& left, const Rational& right){
+    return (left.num * right.den < left.den * right.num);
+}
+bool operator>(const Rational& left, const Rational& right){
+    return right < left;
+}
+bool operator<=(const Rational& left, const Rational& right){
+    return !(right < left);
+}
+bool operator>=(const Rational& left, const Rational& right){
+    return !(left < right);
+}
+
+Rational::operator double() const{
+    return double(num) / den;
+}
+
+
+
+
+
+
+
