@@ -5,9 +5,6 @@ using namespace std;
 #include <set>
 
 
-//compile then execute
-//clang++ -std=c++14 discussion.cpp -o discussion && ./discussion
-
 void merge_sort(std::vector<int> &v){
     
     if(v.size() == 1 || v.size() == 0){
@@ -138,20 +135,31 @@ bool operator==(const C& left,const C& right){
     return (left.i == right.i);
 }
 
-int main(){
+struct Point2D {
+    double x, y;
+    Point2D(double _x, double _y) : x(_x), y(_y) {}
+    void print() const {
+    std::cout << '(' << x << "," << y << ')' << std::endl;
+    }
+    Point2D operator+=(const Point2D& other) {
+    x += other.x; y += other.y;
+    return *this;
+    }
+    Point2D operator*=(double d) {
+    x *= d; y *= d;
+    return *this;
+    }
+};
+Point2D operator+(Point2D& p1, const Point2D& p2 ) { return p1 += p2; }
 
-    // std::unordered_set<int> used_up;
-    // std::vector<int> curr;
-    // unsigned int n = 3;
-    
-    // permutations(used_up, curr, n);
-
-    C c(0);
-    c++;
-    -c;
-    ++c;
-    cout << c;
-
-
+int main() {
+    Point2D q1(1, 0), q2(0, 1);
+    Point2D q3 = q1 + q2;
+    const Point2D& r2 = q2;
+    q2 = Point2D(0, 2);
+    const Point2D& r3 = (q3 *= 2);
+    q3 = Point2D(7, 7);
+    q1.print(); q2.print(); q3.print(); r2.print(); r3.print();
     return 0;
 }
+//clang++ -std=c++14 discussion.cpp -o discussion && ./discussion

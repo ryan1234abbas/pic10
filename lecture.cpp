@@ -3,100 +3,133 @@
 #include <vector>
 #include <unordered_set>
 #include <set>
-
 using namespace std;
 
-
-const string& first(const string& p0, const string& p1){
-    if (p0 > p1){
-        return p1;
-    }
-    return p0;
-}
-
 unsigned int factorial(unsigned int n){
-    if(n == 0){
-        return 1;
-    }
+    if(n == 1 || n == 0){return 1;}
     else{
         return n * factorial(n-1);
     }
 }
 
-void merge_sort(vector<int> &v){
-    const int size = v.size();
-    if(size == 0 || size ==1){
-        return;
-    }
-
-    int first_size = size / 2;
-    int second_size = size - first_size;
-
-    vector<int> v1(v.begin(), v.begin() + first_size);
-    vector<int> v2(v.begin() + first_size, v.end());
-
-    merge_sort(v1);
-    merge_sort(v2);
-    
-    int id1 = 0, id2 = 0, i = 0;
-
-    while(id1 < v1.size() && id2 < v2.size()){
-        if(v1[id1] <= v2[id2]){
-            v[i] = v1[id1];
-            ++i;
-            ++id1;
-        }
-        else if(v1[id1] >= v2[id2]){
-            v[i] = v2[id2];
-            ++i;
-            ++id2;
-        }
-    }
-    while(id1 < v1.size()){
-        v[i] = v1[id1];
-        ++i;
-        ++id1;
-    }
-    while(id2 < v2.size()){
-        v[i] = v2[id2];
-        ++i;
-        ++id2;
-    }
-
-}
-
-void permutation(unsigned int n,vector<int>& current, unordered_set<int>& used){
-    if(current.size() == n){
-        for(int el: current){
+void permutation(int n, std::vector<int>& curr, std::set<int>& used){
+    if(curr.size() == n){
+        for(int el : curr){
             cout << el << " ";
         }
         cout << endl;
     }
-    
-    for(int i = 1; i <= n; ++i){
-        if(used.count(i)){
-            continue;
+
+    for(size_t i = 1; i <= n; ++i){
+        if(!used.count(i)){
+            curr.push_back(i);
+            used.insert(i);
+
+            permutation(n, curr, used);
+
+            curr.pop_back();
+            used.erase(i);
         }
-        current.push_back(i);
-        used.insert(i);
-
-        permutation(n, current, used);
-
-        current.pop_back();
-        used.erase(i);    
     }
+
 }
 
-void bubble_sort(std::vector<int> &v){
-    for(size_t i = 0; i < v.size(); ++i){
-        for(size_t j = 0; j+1 <= v.size()-1; ++j){
+bool palindrome(std::string s, size_t hi, size_t low){
+    if(hi <= low) return true;
+    if(s[hi] != s[low]) return false;
+    return palindrome(s, hi-1, low+1);
+}
+
+void merge_sort(std::vector<int>& v){
+    
+    if(v.size() == 0 || v.size() == 1){return;}
+
+    size_t N1 = v.size() / 2;
+    size_t N2 = v.size() - N1;
+
+    std::vector<int> v1(v.begin(), v.begin() + N1);
+    std::vector<int> v2(v.begin() + N1, v.end());
+
+    merge_sort(v1);
+    merge_sort(v2);
+
+    size_t i = 0, id1 = 0, id2 = 0;
+
+    while(id1 < v1.size() && id2 < v2.size()){
+        if(v1[id1] <= v2[id2]){
+            v[i] = v1[id1];
+            ++id1;
+        }
+        else if(v1[id1] > v2[id2]){
+            v[i] = v2[id2];
+            ++id2;
+        }
+        ++i;
+    }
+
+    while(id1 < v1.size()){
+        v[i] = v1[id1];
+        ++id1;
+        ++i;
+    }
+    while(id2 < v2.size()){
+        v[i] = v2[id2];
+        ++id2;
+        ++i;
+    }
+
+}
+
+void iterative_bubble_sort(std::vector<int>&v){
+    for(size_t i= 0; i < v.size() -1; ++i){
+        for(size_t j = 0; j < v.size() - 1; ++j){
             if(v[j] > v[j+1]){
                 int temp = v[j];
                 v[j] = v[j+1];
-                v[j+1] = temp;
+                v[j+1] = temp; 
             }
         }
     }
+}
+
+void recursive_bubble_sort(std::vector<int>&v, int n){
+    if(n == 0 || n ==1) return;
+    for(size_t i = 0; i < v.size() -1; ++i){
+        if(v[i] > v[i+1]){
+            std::swap(v[i], v[i+1]);
+        }
+    }
+    recursive_bubble_sort(v, n-1);
+
+}
+
+void iterative_selection_sort(std::vector<int> &v){
+    for(size_t i = 0; i < v.size()-1; ++i){
+        size_t min_idx = i;
+        for(size_t j = i+1; j < v.size(); ++j){
+            if(v[j] < v[min_idx]){
+                min_idx = j;
+            }
+        }
+
+        if(min_idx != i){
+            std::swap(v[i],v[min_idx]);
+        }
+    }
+}
+
+void recursive_selection_sort(std::vector<int> &v, size_t beg){
+    if(beg > v.size()-1){
+        return;
+    }
+    size_t min_idx = beg;
+    for(size_t i = beg; i < v.size(); ++i){
+        if(v[i] < v[min_idx]){
+            min_idx = i;
+        }
+    }
+    std::swap(v[beg], v[min_idx]);
+    recursive_selection_sort(v, beg+1);
 }
 
 int iterative_binary_search(const std::vector<int> &v, int target){
@@ -134,230 +167,202 @@ int recursive_binary_search(const std::vector<int>& v, int target, size_t low, s
     return -1;
 }
 
+int iterative_sequential_search(std::vector<int>&v, int n){
+    for(size_t i = 0; i < v.size(); ++i){
+        if(v[i] == n){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int recursive_sequential_search(std::vector<int>&v, int n, size_t idx){
+    if(idx >= v.size()) return -1;
+    if(v[idx] == n) return idx;
+    return recursive_sequential_search(v, n, idx+1);
+}
+
 //operator overloading
-
-class Sets{
-    private:
-        set<int> s;
-    public:
-        Sets(): s() {};
-        Sets(std::set<int>&s1): s(s1){};
-
-        void print() const {
-            for (int el: s){
-                cout << el << " ";
-            }
-        }
-
-        Sets& operator+=(const Sets& other){
-            for(int el: other.s){
-                s.insert(el);
-            }
-            return *this;
-        }
-
-        Sets& operator-=(const Sets& other){
-            for(int el: other.s){
-                if((*this).s.count(el) && other.s.count(el)){
-                    s.erase(el);
-                }
-            }
-            return *this;
-        }
-
-};
-
-class Vector{
-
-    private:
-        vector<int> v1;
-
-    public:
-
-        Vector(): v1() {};
-        Vector(const vector<int> &v): v1(v){};
-
-        std::vector<int> operator+(const Vector &v2) const{
-            size_t N;
-            vector<int> v3;
-
-            if(v1.size() <= v2.v1.size()) N = v1.size();
-            else N = v2.v1.size();
-
-            for(size_t i = 0; i < N; ++i){  
-                v3.push_back(v1[i] + v2.v1[i]);
-            }
-            return v3;
-        }
-
-        void operator+=(const Vector &v2){
-            size_t N;
-
-            if(v1.size() <= v2.v1.size()) N = v1.size();
-            else N = v2.v1.size();
-
-            for(size_t i = 0; i < N; ++i){  
-                v1[i] += v2.v1[i];
-            }
-        }
-
-        bool operator>(const Vector& other) const{
-            int sum1 = 0, sum2 = 0;;
-            for(int el: v1){
-                sum1 += el;
-            }
-            for(int el: other.v1){
-                sum2 += el;
-            }
-
-            return sum1 > sum2;
-
-        }
-
-        void print(){
-            for(int el: v1){
-                cout << el << " ";
-            }
-        }
-
-};
-
-class Point2D{
-    private:
-        int x;
-        int y;
-        friend ostream& operator<<(ostream& out, const Point2D& other);
-        friend bool operator==(Point2D& other1, Point2D& other2);
-
-    public:
-        Point2D(){};
-        Point2D(int _x, int _y): x(_x), y(_y){};
-        
-        //declarations
-        const int& operator[](size_t index) const;
-        int& operator[](size_t index);
-
-        Point2D& operator+=(const Point2D& other){
-            x += other.x;
-            y += other.y;
-            return *this;
-        }
-
-        void print(){
-            cout << x << " ";
-            cout << y;
-        }
-};
-
-ostream& operator<<(ostream& out, const Point2D& other){
-    out << other.x << " ";
-    out << other.y << endl;
-    return out;
-}
-
-bool operator==(Point2D& other1, Point2D& other2){
-    return (other1.x == other2.x) && (other1.y == other2.y);
-}
-
-//why cant we use const on vars or outside ?
-bool operator!=(Point2D& other1, Point2D& other2){
-    return !(other1 == other2);
-}
-
-const int& Point2D::operator[](size_t index) const{
-    if(index == 0) return x;
-    else return y;
-}
-
-int& Point2D::operator[](size_t index){
-    if(index == 0) return x;
-    else return y;
-}
-
-class OneVal{
-    private:
+class C{
+    private: 
         int i;
-        friend ostream& operator<<(ostream& cout, const OneVal v1);
-
+        friend ostream& operator<<(ostream& cout, const C& other);
+        friend istream& operator>>(istream& in, C& other);
+        friend bool operator==(const C& left, const C& right);
+        friend bool operator<(const C& left, const C& right);
     public:
-        OneVal(int _i): i(_i){};
-        OneVal(){};
+        C(int _i): i(_i){};
 
-        OneVal& operator++(){
-            ++i;
+        C& operator+=(const C& other){
+            i += other.i;
             return *this;
         }
-
-        //prefix
-        OneVal& operator--(){
-            --i;
+        C& operator-=(const C& other){
+            i -= other.i;
+            return *this;
+        }
+        C& operator*=(const C& other){
+            i *= other.i;
+            return *this;
+        }
+        C& operator/=(const C& other){
+            i /= other.i;
             return *this;
         }
 
         //postfix
-        OneVal operator--(int){
-            OneVal o = *this;
-            --i;
-            return o;
-        }
-
-        OneVal operator-(){
-            i*=-1;
-            return *this;
-        }
-
-
-};
-
-ostream& operator<<(ostream& cout, const OneVal v1){
-    cout << v1.i;
-    return cout;
-}
-
-class TwoVals{
-    private:
-        int i;
-        int j;
-        friend ostream& operator<<(ostream& cout, const TwoVals& v);
-    public:
-        TwoVals(){};
-        TwoVals(int _i, int _j): i(_i), j(_j){};
-
-        bool operator==(TwoVals& other) const{
-            return (i == other.i) && (j == other.j);
-        }
-
-        TwoVals& operator+=(TwoVals& other){
-            i+= other.i;
-            j += other.j;
-            return *this;
-        }
-
-        TwoVals& operator--(){
-            i -= 1;
-            j -= 1;
-            return *this;
-        }
-
-        TwoVals& operator++(){
+        C operator++(int){
+            C other = *this;
             i += 1;
-            j += 1;
+            return other;
+        }
+        C operator--(int){
+            C other = *this;
+            i -= 1;
+            return other;
+        }
+
+        //prefix
+        C& operator++(){
+            ++i;
             return *this;
+        }
+        C& operator--(){
+            --i;
+            return *this;
+        }
+
+        C operator+() const{
+            return *this;
+        }
+
+        C operator-() const{
+            return C(-i);
+        }
+
+        operator double() const{
+            return static_cast<double>(i);
+        }
+
+        explicit operator char() const{
+            return static_cast<char>(i);
+        }
+
+        int& operator[](size_t j){
+            if(j != 0){ 
+                cout << "Not 0" << endl;
+                return i;
+            }
+            else{
+                return i;
+            }
+        }
+        const int& operator[](size_t j) const{
+            if(j != 0){ 
+                cout << "Not 0" << endl;
+                return i;
+            }
+            else{
+                return i;
+            }
+        }
+
+        int operator()() const{
+            return i * 2;
         }
 };
 
-ostream& operator<<(ostream& cout, const TwoVals& v){
-    cout << v.i;
+ostream& operator<<(ostream& cout, const C& other){
+    cout << other.i;
     return cout;
 }
-
-int main(){
-
-
-
-    return 0;
+istream& operator>>(istream& in, C& other){
+    in >> other.i;
+    return in;
 }
 
-//how can we use operator !+/== without specifying Point2D:: ?
+C operator+(const C& left, const C& right){
+    C val = left;
+    val += right;
+    return val;
+}
+C operator-(const C& left, const C& right){
+    C val = left;
+    val -= right;
+    return val;
+}
+C operator*(const C& left, const C& right){
+    C val = left;
+    val *= right;
+    return val;
+}
+C operator/(const C& left, const C& right){
+    C val = left;
+    val /= right;
+    return val;
+}
 
-//clang++ -std=c++14 lecture.cpp -o lecture && ./lecture
+bool operator==(const C& left, const C& right){
+    return left.i == right.i;
+}
+bool operator!=(const C& left, const C& right){
+    return !(left == right);
+}
+bool operator<(const C& left, const C& right){
+    return left.i < right.i;
+}
+bool operator>(const C& left, const C& right){
+    return right < left;
+}
+bool operator>=(const C& left, const C& right){
+    return !(left < right);
+}
+bool operator<=(const C& left, const C& right){
+    return !(right > left);
+}
+
+struct A {
+    double d;
+    explicit A(double _d) : d(_d) {}
+    operator int() const { return d; }
+};
+
+bool operator==(const A& a1, const A& a2){
+    return (a1.d == a2.d);
+}
+
+//memory management with RAII
+struct RAII{
+    int* p;
+    RAII(); 
+    ~RAII();//destructor
+};
+
+RAII::RAII(): p(new int(8)){
+    cout << "default constructor called" << endl;
+};
+
+RAII::~RAII(){
+    cout << "destructor called" << endl;
+    delete p;
+}
+
+int main() {
+    cout << "Before RAII object in main" << endl;
+
+    RAII r;  // RAII object lives for the entire main function
+
+    cout << "Using heap value: " << *(r.p) << endl;
+
+    cout << "End of main, RAII destructor will run automatically" << endl;
+}
+
+
+
+/*undefined behavior:
+del a pointer to a stack variable
+deleting a pointer 2x
+dereferencing a del pointer or nullptr
+*/
+
+// clang++ -std=c++14 lecture.cpp -o lecture && ./lecture
