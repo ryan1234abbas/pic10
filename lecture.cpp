@@ -347,22 +347,19 @@ RAII::~RAII(){
     delete p;
 }
 
-int main() {
-    cout << "Before RAII object in main" << endl;
+struct B{
+    int* p;
+    B() {p = new int();}
+};
 
-    RAII r;  // RAII object lives for the entire main function
 
-    cout << "Using heap value: " << *(r.p) << endl;
+int main(){
 
-    cout << "End of main, RAII destructor will run automatically" << endl;
+    
+
 }
 
 
 
-/*undefined behavior:
-del a pointer to a stack variable
-deleting a pointer 2x
-dereferencing a del pointer or nullptr
-*/
 
 // clang++ -std=c++14 lecture.cpp -o lecture && ./lecture
