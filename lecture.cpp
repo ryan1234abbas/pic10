@@ -353,12 +353,47 @@ struct B{
 };
 
 
-int main(){
+class LinkedList {
+public:
+    LinkedList() : head(nullptr) {}
+    ~LinkedList() { while (head) { node* temp = head; 
+                                   head = head->next; 
+                                   delete temp; } }
 
+    void add(int val) {
+        node* n = new node(val);
+        n->next = head;
+        head = n;
+    }
+
+    void printList() {
+        node* current = head;
+        while (current) {
+            cout << current->data << " ";
+            current = current->next;
+        }
+    }
+
+private:
+    struct node {
+        int data;
+        node* next;
+        node(int val) : data(val), next(nullptr) {}
+    };
     
+    node* head;
+};
 
+int main() {
+    LinkedList list;
+    list.add(1);
+    list.add(2);
+    list.add(3);
+    list.printList();
+    cout << endl;
+
+    return 0;
 }
-
 
 
 
